@@ -85,7 +85,7 @@ LcdDisplay::LcdDisplay(esp_lcd_panel_io_handle_t panel_io, esp_lcd_panel_handle_
 
 SpiLcdDisplay::SpiLcdDisplay(esp_lcd_panel_io_handle_t panel_io, esp_lcd_panel_handle_t panel,
                            int width, int height, int offset_x, int offset_y, bool mirror_x, bool mirror_y, bool swap_xy,
-                           DisplayFonts fonts)
+                           DisplayFonts fonts, lv_display_rotation_t sw_rotation)
     : LcdDisplay(panel_io, panel, fonts, width, height) {
 
     // draw white
@@ -103,7 +103,11 @@ SpiLcdDisplay::SpiLcdDisplay(esp_lcd_panel_io_handle_t panel_io, esp_lcd_panel_h
 
     ESP_LOGI(TAG, "Initialize LVGL port");
     lvgl_port_cfg_t port_cfg = ESP_LVGL_PORT_INIT_CONFIG();
-    port_cfg.task_priority = 1;
+    // Priority 1 (equal to app_main) starves the LVGL port task during
+    // lvgl_port_add_disp on single-core targets: the main task blocks on the
+    // port queue while holding the port lock, and the port task never runs
+    // to service it. Raise the port task so it can preempt.
+    port_cfg.task_priority = 4;
     port_cfg.timer_period_ms = 50;
     lvgl_port_init(&port_cfg);
 
@@ -127,7 +131,7 @@ SpiLcdDisplay::SpiLcdDisplay(esp_lcd_panel_io_handle_t panel_io, esp_lcd_panel_h
         .flags = {
             .buff_dma = 1,
             .buff_spiram = 0,
-            .sw_rotate = 0,
+            .sw_rotate = static_cast<unsigned int>(sw_rotation != LV_DISPLAY_ROTATION_0),
             .swap_bytes = 1,
             .full_refresh = 0,
             .direct_mode = 0,
@@ -138,6 +142,10 @@ SpiLcdDisplay::SpiLcdDisplay(esp_lcd_panel_io_handle_t panel_io, esp_lcd_panel_h
     if (display_ == nullptr) {
         ESP_LOGE(TAG, "Failed to add display");
         return;
+    }
+
+    if (sw_rotation != LV_DISPLAY_ROTATION_0) {
+        lv_display_set_rotation(display_, sw_rotation);
     }
 
     if (offset_x != 0 || offset_y != 0) {

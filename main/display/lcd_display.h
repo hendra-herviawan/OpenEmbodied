@@ -80,10 +80,16 @@ public:
 // // SPI LCD显示器
 class SpiLcdDisplay : public LcdDisplay {
 public:
+    // sw_rotation: route rotation through LVGL software rotation instead of
+    // panel MADCTL. Needed for panels whose controller RAM is larger than
+    // the visible window (e.g. 240x240 visible in a 240x320 ST7789), where
+    // MADCTL-based rotation mirrors or wraps the framebuffer. LV_DISPLAY_ROTATION_0
+    // (default) keeps the MADCTL path used by all other boards.
     SpiLcdDisplay(esp_lcd_panel_io_handle_t panel_io, esp_lcd_panel_handle_t panel,
                   int width, int height, int offset_x, int offset_y,
                   bool mirror_x, bool mirror_y, bool swap_xy,
-                  DisplayFonts fonts);
+                  DisplayFonts fonts,
+                  lv_display_rotation_t sw_rotation = LV_DISPLAY_ROTATION_0);
 };
 
 // QSPI LCD显示器
