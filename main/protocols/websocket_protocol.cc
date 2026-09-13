@@ -669,6 +669,7 @@ bool WebsocketProtocol::OpenAudioChannel() {
                         custom_variables = std::string(custom_variables_str);
                         free(custom_variables_str);
                     }
+                }
             }
             cJSON_Delete(config_json);
         }
