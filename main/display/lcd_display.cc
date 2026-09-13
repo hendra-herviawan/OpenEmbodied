@@ -103,7 +103,7 @@ SpiLcdDisplay::SpiLcdDisplay(esp_lcd_panel_io_handle_t panel_io, esp_lcd_panel_h
 
     ESP_LOGI(TAG, "Initialize LVGL port");
     lvgl_port_cfg_t port_cfg = ESP_LVGL_PORT_INIT_CONFIG();
-    port_cfg.task_priority = 1;
+    port_cfg.task_priority = 4;
     port_cfg.timer_period_ms = 50;
     lvgl_port_init(&port_cfg);
 
@@ -127,7 +127,11 @@ SpiLcdDisplay::SpiLcdDisplay(esp_lcd_panel_io_handle_t panel_io, esp_lcd_panel_h
         .flags = {
             .buff_dma = 1,
             .buff_spiram = 0,
+#if CONFIG_BOARD_TYPE_MZ01_C3_LCD
+            .sw_rotate = 1, // MZ01_SW_ROTATE: MADCTL rotation broken on this panel
+#else
             .sw_rotate = 0,
+#endif
             .swap_bytes = 1,
             .full_refresh = 0,
             .direct_mode = 0,
@@ -139,6 +143,11 @@ SpiLcdDisplay::SpiLcdDisplay(esp_lcd_panel_io_handle_t panel_io, esp_lcd_panel_h
         ESP_LOGE(TAG, "Failed to add display");
         return;
     }
+#if CONFIG_BOARD_TYPE_MZ01_C3_LCD
+    // MZ01_SW_ROTATE: 270 deg == dino-run landscape mapping. If the UI
+    // appears 180 deg rotated on hardware, switch to ROTATION_90.
+    lv_display_set_rotation(display_, LV_DISPLAY_ROTATION_90); // MZ01: 270 was 180 deg off
+#endif
 
     if (offset_x != 0 || offset_y != 0) {
         lv_display_set_offset(display_, offset_x, offset_y);
@@ -165,7 +174,7 @@ RgbLcdDisplay::RgbLcdDisplay(esp_lcd_panel_io_handle_t panel_io, esp_lcd_panel_h
 
     ESP_LOGI(TAG, "Initialize LVGL port");
     lvgl_port_cfg_t port_cfg = ESP_LVGL_PORT_INIT_CONFIG();
-    port_cfg.task_priority = 1;
+    port_cfg.task_priority = 4;
     port_cfg.timer_period_ms = 50;
     lvgl_port_init(&port_cfg);
 

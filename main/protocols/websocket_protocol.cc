@@ -670,6 +670,7 @@ bool WebsocketProtocol::OpenAudioChannel() {
                         free(custom_variables_str);
                     }
             }
+            }
             cJSON_Delete(config_json);
         }
     }

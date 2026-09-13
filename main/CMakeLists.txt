@@ -23,6 +23,7 @@ set(SOURCES "audio/audio_codec.cc"
             "protocols/protocol.cc"
             "watchdog.cc"
             "protocols/websocket_protocol.cc"
+            "protocols/mz01_xiaozhi_protocol.cc"
             "iot/thing.cc"
             "iot/thing_manager.cc"
             "server/giz_mqtt.cc"
@@ -32,6 +33,7 @@ set(SOURCES "audio/audio_codec.cc"
             "boards/common/data_point_manager.cc"
             "server/protocol/ota_protocol.cc"
             "protocols/mcp.cc"
+            "mcp_server.cc"
             "auth.cc"
             "system_info.cc"
             "application.cc"
@@ -85,6 +87,8 @@ elseif(CONFIG_BOARD_TYPE_GIZWITS_4KEY)
     set(BOARD_TYPE "gizwits-4key")
 elseif(CONFIG_BOARD_TYPE_GIZWITS_4KEY_ML307)
     set(BOARD_TYPE "gizwits-4key-ml307")
+elseif(CONFIG_BOARD_TYPE_MZ01_C3_LCD)
+    set(BOARD_TYPE "mz01-c3-lcd")
 elseif(CONFIG_BOARD_TYPE_GIZWITS_C2_6824)
     set(BOARD_TYPE "gizwits-c2-6824")
 elseif(CONFIG_BOARD_TYPE_GIZWITS_C2_6824_XINGBAO)
@@ -142,6 +146,8 @@ elseif(CONFIG_LANGUAGE_ZH_TW)
     set(LANG_DIR "zh-TW")
 elseif(CONFIG_LANGUAGE_EN_US)
     set(LANG_DIR "en-US")
+elseif(CONFIG_LANGUAGE_ID_ID)
+    set(LANG_DIR "id-ID")
 elseif(CONFIG_LANGUAGE_JA_JP)
     set(LANG_DIR "ja-JP")
 endif()
@@ -161,11 +167,11 @@ if(CONFIG_IDF_TARGET_ESP32)
                              )
 endif()
 
-if(CONFIG_IDF_TARGET_ESP32C2)
+if(CONFIG_IDF_TARGET_ESP32C2 OR CONFIG_IDF_TARGET_ESP32C3)
     list(REMOVE_ITEM SOURCES "display/lv_mem_psram.c")
 endif()
            
-if(CONFIG_USE_EYE_STYLE_VB6824 OR CONFIG_USE_AUDIO_CODEC_DECODE_OPUS)
+if(CONFIG_USE_EYE_STYLE_VB6824 OR CONFIG_USE_AUDIO_CODEC_DECODE_OPUS OR CONFIG_BOARD_TYPE_MZ01_C3_LCD)
     list(APPEND SOURCES "audio/codecs/vb6824_audio_codec.cc")
     list(REMOVE_ITEM SOURCES "audio/codecs/box_audio_codec.cc"
                             "audio/codecs/no_audio_codec.cc"

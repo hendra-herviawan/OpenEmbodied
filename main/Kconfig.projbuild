@@ -21,6 +21,8 @@ choice
         bool "Chinese Traditional"
     config LANGUAGE_EN_US
         bool "English"
+    config LANGUAGE_ID_ID
+        bool "Bahasa Indonesia"
     config LANGUAGE_JA_JP
         bool "Japanese"
 endchoice
@@ -79,6 +81,19 @@ choice BOARD_TYPE
     default BOARD_TYPE_BREAD_COMPACT_WIFI
     help
         Board type. 开发板类型
+    config BOARD_TYPE_MZ01_C3_LCD
+        bool "多智M01 C3 LCD (EZTECH X1 / zuowei-c3-realtime-lcd-id)"
+        depends on IDF_TARGET_ESP32C3
+
+config BOARD_MZ01_DIAG
+    bool "MZ01-C3-LCD board diagnostic mode (prints GPIO/ADC state every 500 ms)"
+    default n
+    depends on BOARD_TYPE_MZ01_C3_LCD
+    help
+        When enabled, the MZ01-C3-LCD board init skips normal app startup
+        and prints raw GPIO/ADC state every 500 ms. Used for pin-map
+        verification. Do not enable in production builds.
+
     config BOARD_TYPE_BREAD_COMPACT_WIFI
         bool "面包板新版接线（WiFi）"
     config BOARD_TYPE_BREAD_COMPACT_WIFI_LCD

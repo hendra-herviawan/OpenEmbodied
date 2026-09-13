@@ -428,7 +428,7 @@ void AudioService::OpusCodecTask() {
             SetDecodeSampleRate(packet->sample_rate, packet->frame_duration);
             if (opus_decoder_->Decode(std::move(packet->payload), decode_pcm_buffer_)) {
                 // 重采样（如果需要）
-#ifndef CONFIG_USE_EYE_STYLE_VB6824
+                // MZ01_EYE_RESAMPLE_DONE: resample unconditionally (24k TTS -> 16k chip)
                 if (opus_decoder_->sample_rate() != codec_->output_sample_rate()) {
                     int target_size = output_resampler_.GetOutputSamples(decode_pcm_buffer_.size());
                     resample_buffer_.clear();  // 清空但保留容量
@@ -449,18 +449,16 @@ void AudioService::OpusCodecTask() {
                     }
                     codec_->OutputData(decode_pcm_buffer_);
                 }
-#else
-                // VB6824模式：直接输出解码后的数据
-                if (!codec_->output_enabled()) {
-                    codec_->EnableOutput(true);
-                    esp_timer_start_periodic(audio_power_timer_, AUDIO_POWER_CHECK_INTERVAL_MS * 1000);
-                }
-                codec_->OutputData(decode_pcm_buffer_);
-#endif
+
                 
                 // 更新最后输出时间
                 last_output_time_ = std::chrono::steady_clock::now();
-                debug_statistics_.playback_count++;
+                static uint32_t mz01_dbg_play = 0;
+                if ((mz01_dbg_play++ % 25) == 0) {
+                    ESP_LOGI(TAG, "MZ01_DBG_PLAY #%u pcm=%u samples",
+                             (unsigned)mz01_dbg_play, (unsigned)decode_pcm_buffer_.size());
+                }
+                debug_statistics_.playback_count++; // MZ01_DBG_PLAY
                 
                 // 检查是否需要启动语音处理
                 if (pending_voice_processing_start_) {
@@ -561,6 +559,12 @@ void AudioService::SetDecodeSampleRate(int sample_rate, int frame_duration) {
     }
 #else
     opus_decoder_->Config(sample_rate, 1, frame_duration);
+    auto codec = Board::GetInstance().GetAudioCodec();
+    if (opus_decoder_->sample_rate() != codec->output_sample_rate()) {
+        ESP_LOGI(TAG, "MZ01: Resampling audio from %d to %d",
+                 opus_decoder_->sample_rate(), codec->output_sample_rate());
+        output_resampler_.Configure(opus_decoder_->sample_rate(), codec->output_sample_rate());
+    }
 #endif
 }
 

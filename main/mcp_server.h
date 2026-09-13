@@ -264,6 +264,7 @@ private:
     McpServer();
     ~McpServer();
 
+public:
     void AddCommonTools();
     void ParseCapabilities(const cJSON* capabilities);
 

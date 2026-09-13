@@ -176,7 +176,7 @@ extern "C" void app_main(void)
     app.Start();
     auto& watchdog = Watchdog::GetInstance();
     watchdog.SubscribeTask(xTaskGetCurrentTaskHandle());
-    
+
 #if SOFT_UART_LOG_ENABLED
     // 发送应用启动成功消息到软串口
     if (soft_uart_port != NULL) {

@@ -142,10 +142,11 @@ private:
     bool buffers_initialized_ = false;            // 缓冲区是否已初始化
 
 
+    // MZ01_EYE_RESAMPLER_MEMBERS: unguarded - eye mode needs output_resampler_
+    OpusResampler output_resampler_;
 #ifndef CONFIG_USE_EYE_STYLE_VB6824
     OpusResampler input_resampler_;
     OpusResampler reference_resampler_;
-    OpusResampler output_resampler_;
 #endif
 
 

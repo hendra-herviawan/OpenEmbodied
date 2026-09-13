@@ -5,6 +5,9 @@
 #include "audio_codec.h"
 #include "server/giz_mqtt.h"
 #include "websocket_protocol.h"
+#if CONFIG_BOARD_TYPE_MZ01_C3_LCD
+#include "mz01_xiaozhi_protocol.h"
+#endif
 #include "ssid_manager.h"
 #include "font_awesome_symbols.h"
 #include "assets/lang_config.h"
@@ -289,9 +292,12 @@ void Application::ToggleChatState() {
             SetDeviceState(kDeviceStateListening);
         }, "ToggleChatState_AbortSpeaking");
     } else if (device_state_ == kDeviceStateListening) {
-        // Schedule([this]() {
-        //     protocol_->CloseAudioChannel();
-        // });
+        // MZ01 (app_togglechat_close_channel): allow BOOT to end a
+        // listening session instead of silently doing nothing.
+        Schedule([this]() {
+            protocol_->CloseAudioChannel();
+            SetDeviceState(kDeviceStateIdle);
+        }, "ToggleChatState_CloseChannel");
     }
 }
 
@@ -471,7 +477,143 @@ void Application::Start() {
     
     // 先创建protocol_，确保MQTT回调中能安全访问
 
+#if CONFIG_BOARD_TYPE_MZ01_C3_LCD
+    protocol_ = std::make_unique<Mz01XiaozhiProtocol>();
+#else
+#if CONFIG_BOARD_TYPE_MZ01_C3_LCD
+    protocol_ = std::make_unique<Mz01XiaozhiProtocol>();
+#else
+#if CONFIG_BOARD_TYPE_MZ01_C3_LCD
+    protocol_ = std::make_unique<Mz01XiaozhiProtocol>();
+#else
+#if CONFIG_BOARD_TYPE_MZ01_C3_LCD
+    protocol_ = std::make_unique<Mz01XiaozhiProtocol>();
+#else
+#if CONFIG_BOARD_TYPE_MZ01_C3_LCD
+    protocol_ = std::make_unique<Mz01XiaozhiProtocol>();
+#else
+#if CONFIG_BOARD_TYPE_MZ01_C3_LCD
+    protocol_ = std::make_unique<Mz01XiaozhiProtocol>();
+#else
+#if CONFIG_BOARD_TYPE_MZ01_C3_LCD
+    protocol_ = std::make_unique<Mz01XiaozhiProtocol>();
+#else
+#if CONFIG_BOARD_TYPE_MZ01_C3_LCD
+    protocol_ = std::make_unique<Mz01XiaozhiProtocol>();
+#else
+#if CONFIG_BOARD_TYPE_MZ01_C3_LCD
+    protocol_ = std::make_unique<Mz01XiaozhiProtocol>();
+#else
+#if CONFIG_BOARD_TYPE_MZ01_C3_LCD
+    protocol_ = std::make_unique<Mz01XiaozhiProtocol>();
+#else
+#if CONFIG_BOARD_TYPE_MZ01_C3_LCD
+    protocol_ = std::make_unique<Mz01XiaozhiProtocol>();
+#else
+#if CONFIG_BOARD_TYPE_MZ01_C3_LCD
+    protocol_ = std::make_unique<Mz01XiaozhiProtocol>();
+#else
+#if CONFIG_BOARD_TYPE_MZ01_C3_LCD
+    protocol_ = std::make_unique<Mz01XiaozhiProtocol>();
+#else
+#if CONFIG_BOARD_TYPE_MZ01_C3_LCD
+    protocol_ = std::make_unique<Mz01XiaozhiProtocol>();
+#else
+#if CONFIG_BOARD_TYPE_MZ01_C3_LCD
+    protocol_ = std::make_unique<Mz01XiaozhiProtocol>();
+#else
+#if CONFIG_BOARD_TYPE_MZ01_C3_LCD
+    protocol_ = std::make_unique<Mz01XiaozhiProtocol>();
+#else
+#if CONFIG_BOARD_TYPE_MZ01_C3_LCD
+    protocol_ = std::make_unique<Mz01XiaozhiProtocol>();
+#else
+#if CONFIG_BOARD_TYPE_MZ01_C3_LCD
+    protocol_ = std::make_unique<Mz01XiaozhiProtocol>();
+#else
+#if CONFIG_BOARD_TYPE_MZ01_C3_LCD
+    protocol_ = std::make_unique<Mz01XiaozhiProtocol>();
+#else
+#if CONFIG_BOARD_TYPE_MZ01_C3_LCD
+    protocol_ = std::make_unique<Mz01XiaozhiProtocol>();
+#else
+#if CONFIG_BOARD_TYPE_MZ01_C3_LCD
+    protocol_ = std::make_unique<Mz01XiaozhiProtocol>();
+#else
+#if CONFIG_BOARD_TYPE_MZ01_C3_LCD
+    protocol_ = std::make_unique<Mz01XiaozhiProtocol>();
+#else
+#if CONFIG_BOARD_TYPE_MZ01_C3_LCD
+    protocol_ = std::make_unique<Mz01XiaozhiProtocol>();
+#else
+#if CONFIG_BOARD_TYPE_MZ01_C3_LCD
+    protocol_ = std::make_unique<Mz01XiaozhiProtocol>();
+#else
+#if CONFIG_BOARD_TYPE_MZ01_C3_LCD
+    protocol_ = std::make_unique<Mz01XiaozhiProtocol>();
+#else
+#if CONFIG_BOARD_TYPE_MZ01_C3_LCD
+    protocol_ = std::make_unique<Mz01XiaozhiProtocol>();
+#else
+#if CONFIG_BOARD_TYPE_MZ01_C3_LCD
+    protocol_ = std::make_unique<Mz01XiaozhiProtocol>();
+#else
+#if CONFIG_BOARD_TYPE_MZ01_C3_LCD
+    protocol_ = std::make_unique<Mz01XiaozhiProtocol>();
+#else
+#if CONFIG_BOARD_TYPE_MZ01_C3_LCD
+    protocol_ = std::make_unique<Mz01XiaozhiProtocol>();
+#else
+#if CONFIG_BOARD_TYPE_MZ01_C3_LCD
+    protocol_ = std::make_unique<Mz01XiaozhiProtocol>();
+#else
+#if CONFIG_BOARD_TYPE_MZ01_C3_LCD
+    protocol_ = std::make_unique<Mz01XiaozhiProtocol>();
+#else
+#if CONFIG_BOARD_TYPE_MZ01_C3_LCD
+    protocol_ = std::make_unique<Mz01XiaozhiProtocol>();
+#else
+#if CONFIG_BOARD_TYPE_MZ01_C3_LCD
+    protocol_ = std::make_unique<Mz01XiaozhiProtocol>();
+#else
+#if CONFIG_BOARD_TYPE_MZ01_C3_LCD
+    protocol_ = std::make_unique<Mz01XiaozhiProtocol>();
+#else
     protocol_ = std::make_unique<WebsocketProtocol>();
+#endif
+#endif
+#endif
+#endif
+#endif
+#endif
+#endif
+#endif
+#endif
+#endif
+#endif
+#endif
+#endif
+#endif
+#endif
+#endif
+#endif
+#endif
+#endif
+#endif
+#endif
+#endif
+#endif
+#endif
+#endif
+#endif
+#endif
+#endif
+#endif
+#endif
+#endif
+#endif
+#endif
+#endif
 
     initGizwitsServer();
 
@@ -534,6 +676,14 @@ void Application::Start() {
         if (strcmp(type->valuestring, "tts") == 0) {
             auto state = cJSON_GetObjectItem(root, "state");
             if (strcmp(state->valuestring, "start") == 0) {
+                // MZ01: standard xiaozhi servers send tts start (not the
+                // Coze fork's pre_start); enter Speaking so that
+                // OnIncomingAudio pushes TTS packets into the decode queue.
+                aborted_ = false;
+                if (device_state_ == kDeviceStateIdle || device_state_ == kDeviceStateListening) {
+                    SetDeviceState(kDeviceStateSpeaking);
+                }
+                ESP_LOGI(TAG, "OnIncomingJson_TTS_Start_Speaking");
                 if (!has_emotion_) {
                     Schedule([this]() {
                         auto display = Board::GetInstance().GetDisplay();
@@ -1140,11 +1290,9 @@ bool Application::CanEnterSleepMode() {
 }
 
 void Application::SendMcpMessage(const std::string& payload) {
-    // Schedule([this, payload]() {
-    //     if (protocol_) {
-    //         protocol_->SendMcpMessage(payload);
-    //     }
-    // });
+    if (protocol_) {
+        protocol_->SendMcpMessage(payload);
+    }
 }
 
 void Application::PlaySound(const std::string_view& sound) {
