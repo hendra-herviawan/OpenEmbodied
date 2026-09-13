@@ -85,6 +85,8 @@ elseif(CONFIG_BOARD_TYPE_GIZWITS_4KEY)
     set(BOARD_TYPE "gizwits-4key")
 elseif(CONFIG_BOARD_TYPE_GIZWITS_4KEY_ML307)
     set(BOARD_TYPE "gizwits-4key-ml307")
+elseif(CONFIG_BOARD_TYPE_MZ01_C3_LCD)
+    set(BOARD_TYPE "mz01-c3-lcd")
 elseif(CONFIG_BOARD_TYPE_GIZWITS_C2_6824)
     set(BOARD_TYPE "gizwits-c2-6824")
 elseif(CONFIG_BOARD_TYPE_GIZWITS_C2_6824_XINGBAO)
@@ -161,7 +163,9 @@ if(CONFIG_IDF_TARGET_ESP32)
                              )
 endif()
 
-if(CONFIG_IDF_TARGET_ESP32C2)
+if(CONFIG_IDF_TARGET_ESP32C2 OR CONFIG_IDF_TARGET_ESP32C3)
+    # lv_mem_psram.c backs the LVGL heap with PSRAM, which C2 and C3 lack;
+    # keeping it duplicates lv_free_core with LVGL's clib allocator.
     list(REMOVE_ITEM SOURCES "display/lv_mem_psram.c")
 endif()
            
